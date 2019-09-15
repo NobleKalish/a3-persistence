@@ -8,6 +8,8 @@ submitPallet = function(e){
     const colorNumber = document.getElementById('colorNumber');
     const inUse = document.getElementById('inUse');
     const ownYes = document.getElementById('ownYes');
+    const ownNo = document.getElementById('ownNo');
+    const own = document.getElementsByName('own');
     const submitBtn = document.getElementById('submit');
 
     let palletListSelect = document.querySelector('#palletList');
@@ -23,6 +25,9 @@ submitPallet = function(e){
         inUse: inUse.value
     };
 
+  
+    newPallet.own = ownYes.checked;
+  
     palletName.value = "";
     designer.value = "";
     colorNumber.value = 0;
@@ -30,8 +35,7 @@ submitPallet = function(e){
     let ele = document.getElementsByName("own");
     for(let i=0;i<ele.length;i++)
         ele[i].checked = false;
-
-    newPallet.own = !!ownYes.checked;
+  
     const body = JSON.stringify(newPallet);
     fetch('/submitPallet', {
         method: 'POST',

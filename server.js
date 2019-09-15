@@ -49,7 +49,7 @@ app.post('/palletList', function (req, res) {
         console.log(err);
     }).then(doc => {
         let palletList;
-        if (doc.palletList) {
+        if (doc) {
             palletList = doc.palletList;
         } else {
             palletList = [];
@@ -70,7 +70,11 @@ app.post('/submitPallet', function (req, res) {
    db.get(session.passport.user).catch(err => {
        console.log(err);
    }).then(doc => {
-       palletList = doc.palletList || [];
+     if (!doc) {
+       palletList = [];
+     } else {
+       palletList = doc.palletList;
+     }
        if (session.palletList) {
            const pallet = session.palletList.find(pallet => pallet === body.palletName);
            if (!pallet) {
