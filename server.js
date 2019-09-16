@@ -4,7 +4,8 @@ const express = require('express'),
     bodyParser = require('body-parser'),
     sessions = require('express-session'),
     LocalStrategy = require('passport-local').Strategy,
-    flash = require('connect-flash');
+    flash = require('connect-flash'),
+    favicon = require('express-favicon');
 
 pouchdb.plugin(require('pouchdb-upsert'));
 
@@ -28,6 +29,7 @@ db.get('users').catch(function (err) {
 });
 
 app.use(express.static('public'));
+app.use(favicon(__dirname + '/public/favicon.png'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(sessions({secret: '{secret}', name: 'session_id', saveUninitialized: true, resave: true}));
@@ -49,7 +51,7 @@ app.post('/palletList', function (req, res) {
         console.log(err);
     }).then(doc => {
         let palletList;
-        if (doc) {
+        if (doc.palletList) {
             palletList = doc.palletList;
         } else {
             palletList = [];
@@ -70,11 +72,7 @@ app.post('/submitPallet', function (req, res) {
    db.get(session.passport.user).catch(err => {
        console.log(err);
    }).then(doc => {
-     if (!doc) {
-       palletList = [];
-     } else {
-       palletList = doc.palletList;
-     }
+       palletList = doc.palletList || [];
        if (session.palletList) {
            const pallet = session.palletList.find(pallet => pallet === body.palletName);
            if (!pallet) {
